@@ -137,7 +137,7 @@ def get_api_user(request):
         display_name = request.META['HTTP_X_DISPLAY_NAME']
         email = request.META['HTTP_X_EMAIL']
         roles = request.META['HTTP_X_ROLES'].split(',')
-        user_name = request.META['HTTP_X_Actor']
+        user_name = request.META['HTTP_X_ACTOR']
     except:
         return AnonymousUser()
 
@@ -153,15 +153,14 @@ def get_api_user(request):
     if nick_name == user_name:
         # Update user info
         user.email = email
-        user.userprofile.access_token = token_info[1]
         user.userprofile.complete_name = display_name
         user.userprofile.actor_id = nick_name
         user.is_staff = settings.ADMIN_ROLE.lower() in roles
         
+    user.userprofile.access_token = token_info[1]
     user_roles = []
     if settings.PROVIDER_ROLE in roles:
         user_roles.append('provider')
-
     if settings.CUSTOMER_ROLE in roles:
         user_roles.append('customer')
 
@@ -176,8 +175,9 @@ def get_api_user(request):
     user.save()
     user.userprofile.current_organization = org
 
-    user.userprofile.save()
     # change user.userprofile.current_organization
+    user.userprofile.save()
+
     return user
 
 
