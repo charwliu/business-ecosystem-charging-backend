@@ -156,7 +156,6 @@ def get_api_user(request):
         user.userprofile.complete_name = display_name
         user.userprofile.actor_id = nick_name
         user.is_staff = settings.ADMIN_ROLE.lower() in roles
-        
     user.userprofile.access_token = token_info[1]
     user_roles = []
     if settings.PROVIDER_ROLE in roles:
